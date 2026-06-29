@@ -95,6 +95,8 @@ section {
 .tool-panel,
 .schedule-section,
 .materials-section,
+.progress-section,
+.parent-section,
 .resource-section,
 .weeks-section,
 .check-section {
@@ -102,6 +104,33 @@ section {
   background: rgba(255, 255, 255, .84);
   border: 1px solid var(--line);
   border-radius: 8px;
+}
+
+.tab-bar {
+  display: flex;
+  gap: 10px;
+  width: min(1180px, calc(100% - 32px));
+  margin: 18px auto 0;
+}
+
+.tab-button {
+  color: var(--navy);
+  background: var(--white);
+  border-color: var(--line);
+}
+
+.tab-button.active {
+  color: var(--white);
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.view {
+  display: none;
+}
+
+.view.active {
+  display: block;
 }
 
 .panel-heading {
@@ -336,6 +365,138 @@ button.secondary {
   border-radius: 8px;
 }
 
+input[type="date"],
+input[type="file"],
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #abc3bd;
+  border-radius: 8px;
+  font: inherit;
+  background: var(--white);
+}
+
+textarea {
+  resize: vertical;
+}
+
+.progress-score,
+.dashboard-card {
+  min-width: 140px;
+  padding: 14px 16px;
+  background: var(--blue);
+  border: 1px solid #bfd6ef;
+  border-radius: 8px;
+}
+
+.progress-score span,
+.dashboard-card span {
+  display: block;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.progress-score strong,
+.dashboard-card strong {
+  display: block;
+  font-size: 1.6rem;
+}
+
+.progress-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.progress-list label {
+  background: #f4fbf0;
+  border-color: #c7dfbf;
+}
+
+.upload-panel {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.upload-panel > label {
+  font-weight: 700;
+}
+
+.save-message {
+  margin: 0;
+  color: var(--green);
+  font-weight: 700;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.parent-grid {
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.parent-card {
+  padding: 18px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.parent-progress-list {
+  display: grid;
+  gap: 8px;
+}
+
+.progress-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.progress-row.done {
+  background: #eff9f1;
+  border-color: #bddbbf;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.photo-card {
+  overflow: hidden;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.photo-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.photo-card button {
+  width: calc(100% - 16px);
+  margin: 8px;
+}
+
 footer {
   padding: 20px;
   color: var(--muted);
@@ -366,9 +527,17 @@ footer {
   .materials-grid,
   .timeline,
   .resource-grid,
+  .dashboard-grid,
+  .parent-grid,
+  .photo-grid,
   .week-cards,
   .checklist {
     grid-template-columns: 1fr;
+  }
+
+  .tab-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -381,6 +550,8 @@ footer {
   .tool-panel,
   .schedule-section,
   .materials-section,
+  .progress-section,
+  .parent-section,
   .resource-section,
   .weeks-section,
   .check-section {

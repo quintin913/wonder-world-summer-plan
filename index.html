@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>二升三暑期學習計畫</title>
+  <title>林阿賀 暑期計畫</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="app-header">
     <div>
       <p class="eyebrow">二年級升三年級</p>
-      <h1>暑期學習計畫</h1>
+      <h1>林阿賀 暑期計畫</h1>
       <p class="subtitle">每天照表練習，平板素材、作業本題目、閱讀短文、英文跟讀、社會自然觀察都先準備好。</p>
     </div>
     <div class="today-card">
@@ -19,104 +19,172 @@
     </div>
   </header>
 
+  <nav class="tab-bar" aria-label="頁面切換">
+    <button type="button" class="tab-button active" data-view="studentView">學生練習</button>
+    <button type="button" class="tab-button" data-view="parentView">家長後台</button>
+  </nav>
+
   <main>
-    <section class="tool-panel" aria-labelledby="practice-title">
-      <div class="panel-heading">
-        <div>
-          <h2 id="practice-title">每日隨機練習</h2>
-          <p>選週次後產生國語和數學題目，可直接寫在作業本或列印。</p>
+    <div id="studentView" class="view active">
+      <section class="tool-panel" aria-labelledby="practice-title">
+        <div class="panel-heading">
+          <div>
+            <h2 id="practice-title">每日隨機練習</h2>
+            <p>選週次後產生國語和數學題目，可直接寫在作業本或列印。</p>
+          </div>
+          <div class="controls">
+            <label for="weekSelect">週次</label>
+            <select id="weekSelect"></select>
+            <button id="generateBtn" type="button">產生今日題目</button>
+            <button id="printBtn" type="button" class="secondary">列印</button>
+          </div>
         </div>
-        <div class="controls">
-          <label for="weekSelect">週次</label>
-          <select id="weekSelect"></select>
-          <button id="generateBtn" type="button">產生今日題目</button>
-          <button id="printBtn" type="button" class="secondary">列印</button>
-        </div>
-      </div>
 
-      <div class="practice-grid">
-        <article class="subject-box">
-          <h3>國語作業本</h3>
-          <div id="chineseOutput" class="output"></div>
+        <div class="practice-grid">
+          <article class="subject-box">
+            <h3>國語作業本</h3>
+            <div id="chineseOutput" class="output"></div>
+          </article>
+          <article class="subject-box">
+            <h3>數學作業本</h3>
+            <div id="mathOutput" class="output"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="schedule-section" aria-labelledby="daily-title">
+        <h2 id="daily-title">每天日程</h2>
+        <div class="timeline">
+          <div><strong>15 分鐘</strong><span>國語平板：聽故事、筆順、閱讀短文</span></div>
+          <div><strong>20 分鐘</strong><span>國語作業本：生字、造詞、造句、閱讀題</span></div>
+          <div><strong>15 分鐘</strong><span>數學平板：單元影片、互動練習</span></div>
+          <div><strong>25 分鐘</strong><span>數學作業本：計算題、應用題、訂正</span></div>
+          <div><strong>10 分鐘</strong><span>英文平板：Wonder World 音檔、單字跟讀</span></div>
+          <div><strong>10 分鐘</strong><span>社會或自然：生活觀察、地圖、實驗記錄</span></div>
+        </div>
+      </section>
+
+      <section class="materials-section" aria-labelledby="materials-title">
+        <div class="panel-heading">
+          <div>
+            <h2 id="materials-title">今日素材包</h2>
+            <p>選第幾週第幾天，直接拿這一格素材來做平板與作業本練習。</p>
+          </div>
+          <div class="controls">
+            <label for="daySelect">日期</label>
+            <select id="daySelect"></select>
+          </div>
+        </div>
+        <div id="materialsOutput" class="materials-grid"></div>
+      </section>
+
+      <section class="progress-section" aria-labelledby="progress-title">
+        <div class="panel-heading">
+          <div>
+            <h2 id="progress-title">今天完成回報</h2>
+            <p>勾選完成項目，上傳手寫作業照片，家長後台就能看到今天進度。</p>
+          </div>
+          <div class="progress-score">
+            <span>完成度</span>
+            <strong id="studentPercent">0%</strong>
+          </div>
+        </div>
+        <div id="studentChecklist" class="checklist progress-list"></div>
+        <div class="upload-panel">
+          <label for="photoInput">手寫作業拍照上傳</label>
+          <input id="photoInput" type="file" accept="image/*" capture="environment">
+          <textarea id="studentNote" rows="3" placeholder="今天哪一題比較難？或想跟家長說什麼？"></textarea>
+          <div class="controls">
+            <button id="saveProgressBtn" type="button">儲存今天進度</button>
+            <button id="clearTodayBtn" type="button" class="secondary">清除今天資料</button>
+          </div>
+          <p id="saveMessage" class="save-message" aria-live="polite"></p>
+          <div id="studentPhotoPreview" class="photo-grid"></div>
+        </div>
+      </section>
+
+      <section class="resource-section" aria-labelledby="resources-title">
+        <h2 id="resources-title">平板資源快捷</h2>
+        <div class="resource-grid">
+          <a href="https://stroke-order.learningweb.moe.edu.tw/" target="_blank" rel="noreferrer">
+            <strong>教育部筆順</strong>
+            <span>查國字筆順、做生字練習簿</span>
+          </a>
+          <a href="https://dict.mini.moe.edu.tw/" target="_blank" rel="noreferrer">
+            <strong>教育部國語小字典</strong>
+            <span>查字音、字義、造詞</span>
+          </a>
+          <a href="https://www.junyiacademy.org/topics/k-m3a" target="_blank" rel="noreferrer">
+            <strong>均一類康軒三年級數學</strong>
+            <span>10000 以內的數、四位數加減、毫米、乘法</span>
+          </a>
+          <a href="https://945cloud.knsh.com.tw/CD/E/Study/kWW1/" target="_blank" rel="noreferrer">
+            <strong>Wonder World 1 學習評量</strong>
+            <span>康軒英語線上聽與單元練習</span>
+          </a>
+          <a href="https://945cloud.knsh.com.tw/CD/E/EN/index.asp" target="_blank" rel="noreferrer">
+            <strong>康軒英語 CD 線上聽</strong>
+            <span>Wonder World 音檔入口</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="weeks-section" aria-labelledby="weeks-title">
+        <h2 id="weeks-title">兩個月週計畫</h2>
+        <div id="weekCards" class="week-cards"></div>
+      </section>
+    </div>
+
+    <div id="parentView" class="view">
+      <section class="parent-section" aria-labelledby="parent-title">
+        <div class="panel-heading">
+          <div>
+            <h2 id="parent-title">家長後台</h2>
+            <p>查看今天完成度、各項進度、孩子留言和手寫作業照片。</p>
+          </div>
+          <div class="controls">
+            <label for="parentDate">查看日期</label>
+            <input id="parentDate" type="date">
+            <button id="refreshParentBtn" type="button">重新整理</button>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="dashboard-card">
+            <span>今日完成度</span>
+            <strong id="parentPercent">0%</strong>
+          </article>
+          <article class="dashboard-card">
+            <span>已完成項目</span>
+            <strong id="parentDoneCount">0 / 0</strong>
+          </article>
+          <article class="dashboard-card">
+            <span>手寫照片</span>
+            <strong id="parentPhotoCount">0 張</strong>
+          </article>
+        </div>
+
+        <div class="parent-grid">
+          <article class="parent-card">
+            <h3>進度明細</h3>
+            <div id="parentProgressList" class="parent-progress-list"></div>
+          </article>
+          <article class="parent-card">
+            <h3>孩子留言</h3>
+            <p id="parentNote" class="read-box">尚無留言。</p>
+          </article>
+        </div>
+
+        <article class="parent-card">
+          <h3>手寫作業照片</h3>
+          <div id="parentPhotoGallery" class="photo-grid"></div>
         </article>
-        <article class="subject-box">
-          <h3>數學作業本</h3>
-          <div id="mathOutput" class="output"></div>
-        </article>
-      </div>
-    </section>
-
-    <section class="schedule-section" aria-labelledby="daily-title">
-      <h2 id="daily-title">每天日程</h2>
-      <div class="timeline">
-        <div><strong>15 分鐘</strong><span>國語平板：聽故事、筆順、閱讀短文</span></div>
-        <div><strong>20 分鐘</strong><span>國語作業本：生字、造詞、造句、閱讀題</span></div>
-        <div><strong>15 分鐘</strong><span>數學平板：單元影片、互動練習</span></div>
-        <div><strong>25 分鐘</strong><span>數學作業本：計算題、應用題、訂正</span></div>
-        <div><strong>10 分鐘</strong><span>英文平板：Wonder World 音檔、單字跟讀</span></div>
-        <div><strong>10 分鐘</strong><span>社會或自然：生活觀察、地圖、實驗記錄</span></div>
-      </div>
-    </section>
-
-    <section class="materials-section" aria-labelledby="materials-title">
-      <div class="panel-heading">
-        <div>
-          <h2 id="materials-title">今日素材包</h2>
-          <p>選第幾週第幾天，直接拿這一格素材來做平板與作業本練習。</p>
-        </div>
-        <div class="controls">
-          <label for="daySelect">日期</label>
-          <select id="daySelect"></select>
-        </div>
-      </div>
-      <div id="materialsOutput" class="materials-grid"></div>
-    </section>
-
-    <section class="resource-section" aria-labelledby="resources-title">
-      <h2 id="resources-title">平板資源快捷</h2>
-      <div class="resource-grid">
-        <a href="https://stroke-order.learningweb.moe.edu.tw/" target="_blank" rel="noreferrer">
-          <strong>教育部筆順</strong>
-          <span>查國字筆順、做生字練習簿</span>
-        </a>
-        <a href="https://dict.mini.moe.edu.tw/" target="_blank" rel="noreferrer">
-          <strong>教育部國語小字典</strong>
-          <span>查字音、字義、造詞</span>
-        </a>
-        <a href="https://www.junyiacademy.org/topics/k-m3a" target="_blank" rel="noreferrer">
-          <strong>均一類康軒三年級數學</strong>
-          <span>10000 以內的數、四位數加減、毫米、乘法</span>
-        </a>
-        <a href="https://945cloud.knsh.com.tw/CD/E/Study/kWW1/" target="_blank" rel="noreferrer">
-          <strong>Wonder World 1 學習評量</strong>
-          <span>康軒英語線上聽與單元練習</span>
-        </a>
-        <a href="https://945cloud.knsh.com.tw/CD/E/EN/index.asp" target="_blank" rel="noreferrer">
-          <strong>康軒英語 CD 線上聽</strong>
-          <span>Wonder World 音檔入口</span>
-        </a>
-      </div>
-    </section>
-
-    <section class="weeks-section" aria-labelledby="weeks-title">
-      <h2 id="weeks-title">兩個月週計畫</h2>
-      <div id="weekCards" class="week-cards"></div>
-    </section>
-
-    <section class="check-section" aria-labelledby="check-title">
-      <h2 id="check-title">家長每日檢查</h2>
-      <div class="checklist">
-        <label><input type="checkbox"> 國語有大聲朗讀</label>
-        <label><input type="checkbox"> 生字寫端正</label>
-        <label><input type="checkbox"> 數學計算有訂正</label>
-        <label><input type="checkbox"> 平板練習不超過 40 分鐘</label>
-        <label><input type="checkbox"> 今天有休息和運動</label>
-      </div>
-    </section>
+      </section>
+    </div>
   </main>
 
   <footer>
-    <p>週一到週五執行，週六輕複習，週日休息。正式單元仍以學校發的課本與老師進度為準。</p>
+    <p>週一到週五執行，週六輕複習，週日休息。進度與照片會存在目前這台裝置的瀏覽器中。</p>
   </footer>
 
   <script src="script.js"></script>
