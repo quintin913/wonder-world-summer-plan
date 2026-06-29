@@ -11,7 +11,7 @@
     <div>
       <p class="eyebrow">二年級升三年級</p>
       <h1>暑期學習計畫</h1>
-      <p class="subtitle">康軒國語、Wonder World 英文、康軒數學、康軒社會、翰林自然銜接練習</p>
+      <p class="subtitle">每天照表練習，平板素材、作業本題目、閱讀短文、英文跟讀、社會自然觀察都先準備好。</p>
     </div>
     <div class="today-card">
       <span>今日日期</span>
@@ -24,7 +24,7 @@
       <div class="panel-heading">
         <div>
           <h2 id="practice-title">每日隨機練習</h2>
-          <p>選週次後產生題目，可寫在作業本，也可以直接口答檢查。</p>
+          <p>選週次後產生國語和數學題目，可直接寫在作業本或列印。</p>
         </div>
         <div class="controls">
           <label for="weekSelect">週次</label>
@@ -58,6 +58,46 @@
       </div>
     </section>
 
+    <section class="materials-section" aria-labelledby="materials-title">
+      <div class="panel-heading">
+        <div>
+          <h2 id="materials-title">今日素材包</h2>
+          <p>選第幾週第幾天，直接拿這一格素材來做平板與作業本練習。</p>
+        </div>
+        <div class="controls">
+          <label for="daySelect">日期</label>
+          <select id="daySelect"></select>
+        </div>
+      </div>
+      <div id="materialsOutput" class="materials-grid"></div>
+    </section>
+
+    <section class="resource-section" aria-labelledby="resources-title">
+      <h2 id="resources-title">平板資源快捷</h2>
+      <div class="resource-grid">
+        <a href="https://stroke-order.learningweb.moe.edu.tw/" target="_blank" rel="noreferrer">
+          <strong>教育部筆順</strong>
+          <span>查國字筆順、做生字練習簿</span>
+        </a>
+        <a href="https://dict.mini.moe.edu.tw/" target="_blank" rel="noreferrer">
+          <strong>教育部國語小字典</strong>
+          <span>查字音、字義、造詞</span>
+        </a>
+        <a href="https://www.junyiacademy.org/topics/k-m3a" target="_blank" rel="noreferrer">
+          <strong>均一類康軒三年級數學</strong>
+          <span>10000 以內的數、四位數加減、毫米、乘法</span>
+        </a>
+        <a href="https://945cloud.knsh.com.tw/CD/E/Study/kWW1/" target="_blank" rel="noreferrer">
+          <strong>Wonder World 1 學習評量</strong>
+          <span>康軒英語線上聽與單元練習</span>
+        </a>
+        <a href="https://945cloud.knsh.com.tw/CD/E/EN/index.asp" target="_blank" rel="noreferrer">
+          <strong>康軒英語 CD 線上聽</strong>
+          <span>Wonder World 音檔入口</span>
+        </a>
+      </div>
+    </section>
+
     <section class="weeks-section" aria-labelledby="weeks-title">
       <h2 id="weeks-title">兩個月週計畫</h2>
       <div id="weekCards" class="week-cards"></div>
@@ -76,7 +116,7 @@
   </main>
 
   <footer>
-    <p>建議週一到週五執行，週六輕複習，週日休息。實際課本單元以學校發書為準。</p>
+    <p>週一到週五執行，週六輕複習，週日休息。正式單元仍以學校發的課本與老師進度為準。</p>
   </footer>
 
   <script src="script.js"></script>

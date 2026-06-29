@@ -81,7 +81,39 @@ const readingTexts = [
   "爸爸和我一起整理房間。我負責把書放回書架，也把玩具收到盒子裡。",
   "午後下了一場雨，樹葉變得亮亮的。小明站在窗邊，看見天空慢慢變藍。",
   "社區公園裡有許多人。有的人散步，有的人打球，也有人坐在椅子上聊天。",
-  "妹妹把糖放進水裡攪一攪，糖慢慢不見了。她好奇地問：糖跑去哪裡了？"
+  "妹妹把糖放進水裡攪一攪，糖慢慢不見了。她好奇地問：糖跑去哪裡了？",
+  "阿宏第一次自己整理書包。他把鉛筆盒、聯絡簿和水壺一樣一樣放進去。",
+  "我們走到巷口的小店買早餐。老闆笑著說早安，熱熱的飯糰香香的。",
+  "小恩在公園看見一隻小鳥。牠跳到樹枝上，歪著頭，好像正在聽聲音。"
+];
+
+const englishDays = [
+  { words: ["hello", "teacher", "friend"], lines: ["Hello, teacher.", "I am ready.", "This is my friend."] },
+  { words: ["red", "blue", "green"], lines: ["It is red.", "I like blue.", "Show me green."] },
+  { words: ["one", "two", "three"], lines: ["One, two, three.", "I have two pencils.", "How many?"] },
+  { words: ["book", "bag", "pencil"], lines: ["This is my book.", "That is my bag.", "I have a pencil."] },
+  { words: ["cat", "dog", "bird"], lines: ["It is a cat.", "I like dogs.", "The bird is small."] },
+  { words: ["run", "jump", "walk"], lines: ["I can run.", "Can you jump?", "Let us walk."] },
+  { words: ["happy", "sad", "tired"], lines: ["I am happy.", "Are you tired?", "He is sad."] },
+  { words: ["morning", "afternoon", "night"], lines: ["Good morning.", "Good afternoon.", "Good night."] }
+];
+
+const observationTasks = [
+  "畫出家裡到學校或附近便利商店的路線，標出 3 個地點。",
+  "訪問一位家人：今天做了哪些家事？把答案寫成 3 句。",
+  "觀察一盆植物 5 分鐘，畫葉子形狀，寫下顏色和大小。",
+  "做溶解觀察：糖、鹽、沙各一小匙放水裡，記錄哪一個會不見。",
+  "觀察今天的天空，記錄天氣、雲量、溫度感覺。",
+  "找出家中 3 個會用到水的地方，寫出節水方法。",
+  "到社區或家附近看招牌，記錄 3 個商店名稱和用途。",
+  "整理開學物品清單：文具、書包、水壺、衛生紙，各檢查一次。"
+];
+
+const mathVideoLinks = [
+  { title: "10000 以內的數", url: "https://www.junyiacademy.org/topics/k-m3a" },
+  { title: "四位數的加減", url: "https://www.junyiacademy.org/topics/k-m3a" },
+  { title: "毫米與長度", url: "https://www.junyiacademy.org/topics/k-m3a" },
+  { title: "乘法練習", url: "https://www.junyiacademy.org/topics/k-m3a" }
 ];
 
 function pickMany(items, count) {
@@ -114,7 +146,7 @@ function makeMathProblems(week) {
       problems.push(`${a} - ${b} =`);
     }
     applications.push("小美有 236 張貼紙，哥哥又給她 148 張，現在共有幾張？");
-    applications.push("書店原有 732 本故事書，賣出 216 本，還剩幾本？");
+    applications.push("書店有 732 本故事書，賣出 216 本，還剩幾本？");
   } else if (week === 3) {
     for (let i = 0; i < 10; i += 1) {
       problems.push(`請寫出 ${randomNumber(1000, 9999)} 的千位、百位、十位、個位。`);
@@ -130,7 +162,7 @@ function makeMathProblems(week) {
       const b = randomNumber(600, a - 500);
       problems.push(`${a} - ${b} =`);
     }
-    applications.push("園遊會賣出 1258 張園遊券，下午又賣出 2369 張，全天共賣出幾張？");
+    applications.push("園遊會上午賣出 1258 張園遊券，下午又賣出 2369 張，全天共賣出幾張？");
     applications.push("圖書館有 6420 本書，借出 1875 本，館內還有幾本？");
   } else if (week === 5) {
     for (let i = 0; i < 6; i += 1) {
@@ -139,7 +171,7 @@ function makeMathProblems(week) {
     for (let i = 0; i < 4; i += 1) {
       problems.push(`${randomNumber(20, 90)} 毫米 = 多少公分多少毫米？`);
     }
-    applications.push("鉛筆長 12 公分 5 毫米，橡皮擦長 4 公分 8 毫米，兩樣東西合起來多長？");
+    applications.push("鉛筆長 12 公分 5 毫米，橡皮擦長 4 公分 8 毫米，兩樣合起來多長？");
     applications.push("一條緞帶長 30 公分，剪掉 8 公分 6 毫米，還剩多長？");
   } else if (week === 6) {
     for (let i = 0; i < 10; i += 1) {
@@ -166,6 +198,23 @@ function makeMathProblems(week) {
   return { problems, applications };
 }
 
+function makeDayMaterials() {
+  const days = [];
+  for (let week = 1; week <= 8; week += 1) {
+    for (let day = 1; day <= 5; day += 1) {
+      const words = pickMany(wordSets[week - 1], 5);
+      const reading = readingTexts[(week + day - 2) % readingTexts.length];
+      const english = englishDays[(week + day - 2) % englishDays.length];
+      const task = observationTasks[(week + day - 2) % observationTasks.length];
+      const mathLink = mathVideoLinks[(week - 1) % mathVideoLinks.length];
+      days.push({ week, day, words, reading, english, task, mathLink });
+    }
+  }
+  return days;
+}
+
+const dayMaterials = makeDayMaterials();
+
 function renderChinese(week) {
   const words = pickMany(wordSets[week - 1], 5);
   const text = readingTexts[Math.floor(Math.random() * readingTexts.length)];
@@ -177,7 +226,7 @@ function renderChinese(week) {
       <li>每個生字造 1 個詞。</li>
       <li>選 2 個詞語各造 1 句。</li>
       <li>朗讀短文 2 次：${text}</li>
-      <li>閱讀回答：主角是誰？發生什麼事？心情或結果如何？</li>
+      <li>閱讀回答：主角是誰？發生什麼事？結果如何？</li>
     </ol>
   `;
 }
@@ -190,6 +239,68 @@ function renderMath(week) {
     <p><strong>應用題</strong></p>
     <ol>${applications.map(problem => `<li>${problem}</li>`).join("")}</ol>
     <p><strong>訂正區：</strong>我錯的題目是 <span class="answer-line"></span>，原因是 <span class="answer-line"></span>。</p>
+  `;
+}
+
+function renderMaterials() {
+  const index = Number(document.querySelector("#daySelect").value);
+  const item = dayMaterials[index];
+  const math = makeMathProblems(item.week);
+  document.querySelector("#materialsOutput").innerHTML = `
+    <article class="material-card">
+      <h3>國語平板素材</h3>
+      <p class="read-box">${item.reading}</p>
+      <ol>
+        <li>聽家長或平板朗讀 1 次。</li>
+        <li>自己朗讀 2 次。</li>
+        <li>口頭回答：誰？在哪裡？做了什麼？</li>
+      </ol>
+      <div class="link-list">
+        <a href="https://stroke-order.learningweb.moe.edu.tw/" target="_blank" rel="noreferrer"><strong>查筆順</strong><span>教育部國字標準字體筆順學習網</span></a>
+        <a href="https://dict.mini.moe.edu.tw/" target="_blank" rel="noreferrer"><strong>查字義</strong><span>教育部國語小字典</span></a>
+      </div>
+    </article>
+    <article class="material-card">
+      <h3>國語作業本素材</h3>
+      <p><strong>今日生字</strong></p>
+      <div class="word-bank">${item.words.map(word => `<span>${word}</span>`).join("")}</div>
+      <ol>
+        <li>每字 5 次。</li>
+        <li>每字造 1 個詞。</li>
+        <li>選 2 個詞造句。</li>
+        <li>寫閱讀題答案 3 句。</li>
+      </ol>
+    </article>
+    <article class="material-card">
+      <h3>數學平板素材</h3>
+      <p class="prompt-box">今天先看或練習：${plans[item.week - 1].math}</p>
+      <div class="link-list">
+        <a href="${item.mathLink.url}" target="_blank" rel="noreferrer"><strong>${item.mathLink.title}</strong><span>均一教育平台類康軒三年級數學</span></a>
+      </div>
+    </article>
+    <article class="material-card">
+      <h3>數學作業本素材</h3>
+      <ol>${math.problems.slice(0, 8).map(problem => `<li>${problem} <span class="answer-line"></span></li>`).join("")}</ol>
+      <p><strong>應用題：</strong>${math.applications[0]}</p>
+    </article>
+    <article class="material-card">
+      <h3>英文平板素材</h3>
+      <p><strong>今日單字</strong></p>
+      <div class="tag-row">${item.english.words.map(word => `<span>${word}</span>`).join("")}</div>
+      <ol>${item.english.lines.map(line => `<li>跟讀 3 次：${line}</li>`).join("")}</ol>
+      <div class="link-list">
+        <a href="https://945cloud.knsh.com.tw/CD/E/Study/kWW1/" target="_blank" rel="noreferrer"><strong>Wonder World 1 學習評量</strong><span>康軒國小英語線上聽</span></a>
+      </div>
+    </article>
+    <article class="material-card">
+      <h3>社會或自然素材</h3>
+      <p class="prompt-box">${item.task}</p>
+      <ol>
+        <li>畫一張小圖或拍一張照片。</li>
+        <li>寫下「我看到」、「我想到」、「我想問」。</li>
+        <li>用 1 分鐘說給家人聽。</li>
+      </ol>
+    </article>
   `;
 }
 
@@ -210,6 +321,9 @@ function init() {
   const weekSelect = document.querySelector("#weekSelect");
   weekSelect.innerHTML = plans.map(plan => `<option value="${plan.week}">第 ${plan.week} 週：${plan.title}</option>`).join("");
 
+  const daySelect = document.querySelector("#daySelect");
+  daySelect.innerHTML = dayMaterials.map((item, index) => `<option value="${index}">第 ${item.week} 週，第 ${item.day} 天</option>`).join("");
+
   document.querySelector("#weekCards").innerHTML = plans.map(plan => `
     <article class="week-card">
       <h3>第 ${plan.week} 週</h3>
@@ -224,7 +338,9 @@ function init() {
 
   document.querySelector("#generateBtn").addEventListener("click", generatePractice);
   document.querySelector("#printBtn").addEventListener("click", () => window.print());
+  document.querySelector("#daySelect").addEventListener("change", renderMaterials);
   generatePractice();
+  renderMaterials();
 }
 
 init();

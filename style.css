@@ -94,10 +94,12 @@ section {
 
 .tool-panel,
 .schedule-section,
+.materials-section,
+.resource-section,
 .weeks-section,
 .check-section {
   padding: 22px;
-  background: rgba(255, 255, 255, .82);
+  background: rgba(255, 255, 255, .84);
   border: 1px solid var(--line);
   border-radius: 8px;
 }
@@ -131,6 +133,7 @@ button {
 }
 
 select {
+  max-width: 100%;
   padding: 0 12px;
   background: var(--white);
 }
@@ -150,56 +153,121 @@ button.secondary {
   border-color: #e6be5b;
 }
 
-.practice-grid {
+.practice-grid,
+.materials-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
 
-.subject-box {
-  min-height: 360px;
+.subject-box,
+.material-card {
+  min-height: 320px;
   padding: 18px;
   background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 8px;
 }
 
-.subject-box:nth-child(2) {
+.subject-box:nth-child(2),
+.material-card:nth-child(2),
+.material-card:nth-child(6) {
   background: #f8fbff;
 }
 
+.material-card:nth-child(3) {
+  background: #fff9e8;
+}
+
+.material-card:nth-child(4) {
+  background: #f4fbf0;
+}
+
+.material-card:nth-child(5) {
+  background: #fff3f5;
+}
+
 .output ol,
-.output ul {
+.output ul,
+.material-card ol,
+.material-card ul {
   padding-left: 1.35rem;
 }
 
-.output li {
+.output li,
+.material-card li {
   margin-bottom: 8px;
 }
 
-.word-bank {
+.word-bank,
+.tag-row {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin: 10px 0 14px;
 }
 
-.word-bank span {
+.word-bank span,
+.tag-row span {
   display: inline-grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+  padding: 0 10px;
   background: var(--mint);
   border: 1px solid #b9d8cc;
   border-radius: 8px;
-  font-size: 1.25rem;
+  font-size: 1.12rem;
   font-weight: 700;
+}
+
+.tag-row span {
+  min-height: 34px;
+  color: var(--navy);
+  background: var(--blue);
+  font-size: .95rem;
 }
 
 .answer-line {
   display: inline-block;
   min-width: 120px;
   border-bottom: 1px solid var(--ink);
+}
+
+.read-box,
+.prompt-box {
+  padding: 12px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.link-list {
+  display: grid;
+  gap: 8px;
+}
+
+.link-list a,
+.resource-grid a {
+  display: block;
+  padding: 12px;
+  color: var(--navy);
+  text-decoration: none;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.link-list a:hover,
+.resource-grid a:hover {
+  border-color: var(--green);
+}
+
+.link-list span,
+.resource-grid span {
+  display: block;
+  color: var(--muted);
+  font-size: .92rem;
 }
 
 .timeline {
@@ -224,6 +292,12 @@ button.secondary {
 .timeline span {
   display: block;
   color: var(--muted);
+}
+
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .week-cards {
@@ -268,6 +342,12 @@ footer {
   text-align: center;
 }
 
+@media (max-width: 960px) {
+  .resource-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 860px) {
   .app-header,
   .panel-heading {
@@ -283,7 +363,9 @@ footer {
   }
 
   .practice-grid,
+  .materials-grid,
   .timeline,
+  .resource-grid,
   .week-cards,
   .checklist {
     grid-template-columns: 1fr;
@@ -298,6 +380,8 @@ footer {
   .app-header,
   .tool-panel,
   .schedule-section,
+  .materials-section,
+  .resource-section,
   .weeks-section,
   .check-section {
     border-color: #999;
@@ -305,7 +389,9 @@ footer {
 
   button,
   select,
-  label[for="weekSelect"] {
+  label[for="weekSelect"],
+  label[for="daySelect"],
+  .resource-section {
     display: none;
   }
 }
