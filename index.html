@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>二升三暑期學習計畫</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <p class="eyebrow">二年級升三年級</p>
+      <h1>暑期學習計畫</h1>
+      <p class="subtitle">康軒國語、Wonder World 英文、康軒數學、康軒社會、翰林自然銜接練習</p>
+    </div>
+    <div class="today-card">
+      <span>今日日期</span>
+      <strong id="todayText"></strong>
+    </div>
+  </header>
+
+  <main>
+    <section class="tool-panel" aria-labelledby="practice-title">
+      <div class="panel-heading">
+        <div>
+          <h2 id="practice-title">每日隨機練習</h2>
+          <p>選週次後產生題目，可寫在作業本，也可以直接口答檢查。</p>
+        </div>
+        <div class="controls">
+          <label for="weekSelect">週次</label>
+          <select id="weekSelect"></select>
+          <button id="generateBtn" type="button">產生今日題目</button>
+          <button id="printBtn" type="button" class="secondary">列印</button>
+        </div>
+      </div>
+
+      <div class="practice-grid">
+        <article class="subject-box">
+          <h3>國語作業本</h3>
+          <div id="chineseOutput" class="output"></div>
+        </article>
+        <article class="subject-box">
+          <h3>數學作業本</h3>
+          <div id="mathOutput" class="output"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="schedule-section" aria-labelledby="daily-title">
+      <h2 id="daily-title">每天日程</h2>
+      <div class="timeline">
+        <div><strong>15 分鐘</strong><span>國語平板：聽故事、筆順、閱讀短文</span></div>
+        <div><strong>20 分鐘</strong><span>國語作業本：生字、造詞、造句、閱讀題</span></div>
+        <div><strong>15 分鐘</strong><span>數學平板：單元影片、互動練習</span></div>
+        <div><strong>25 分鐘</strong><span>數學作業本：計算題、應用題、訂正</span></div>
+        <div><strong>10 分鐘</strong><span>英文平板：Wonder World 音檔、單字跟讀</span></div>
+        <div><strong>10 分鐘</strong><span>社會或自然：生活觀察、地圖、實驗記錄</span></div>
+      </div>
+    </section>
+
+    <section class="weeks-section" aria-labelledby="weeks-title">
+      <h2 id="weeks-title">兩個月週計畫</h2>
+      <div id="weekCards" class="week-cards"></div>
+    </section>
+
+    <section class="check-section" aria-labelledby="check-title">
+      <h2 id="check-title">家長每日檢查</h2>
+      <div class="checklist">
+        <label><input type="checkbox"> 國語有大聲朗讀</label>
+        <label><input type="checkbox"> 生字寫端正</label>
+        <label><input type="checkbox"> 數學計算有訂正</label>
+        <label><input type="checkbox"> 平板練習不超過 40 分鐘</label>
+        <label><input type="checkbox"> 今天有休息和運動</label>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>建議週一到週五執行，週六輕複習，週日休息。實際課本單元以學校發書為準。</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
