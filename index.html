@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>林阿賀 暑期計畫</title>
+  <title>賀賀暑期計畫</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="app-header">
     <div>
       <p class="eyebrow">二年級升三年級</p>
-      <h1>林阿賀 暑期計畫</h1>
+      <h1>賀賀暑期計畫</h1>
       <p class="subtitle">每天照表練習，平板素材、作業本題目、閱讀短文、英文跟讀、社會自然觀察都先準備好。</p>
     </div>
     <div class="today-card">
@@ -136,16 +136,29 @@
     </div>
 
     <div id="parentView" class="view">
-      <section class="parent-section" aria-labelledby="parent-title">
+      <section id="parentLogin" class="parent-section parent-login" aria-labelledby="parent-login-title">
+        <h2 id="parent-login-title">家長後台登入</h2>
+        <p>請輸入家長密碼後查看賀賀今天的進度與作業照片。</p>
+        <div class="login-row">
+          <label for="parentPassword">密碼</label>
+          <input id="parentPassword" type="password" inputmode="numeric" autocomplete="current-password" placeholder="請輸入密碼">
+          <button id="parentLoginBtn" type="button">登入後台</button>
+        </div>
+        <p id="parentLoginMessage" class="save-message" aria-live="polite"></p>
+      </section>
+
+      <section id="parentDashboard" class="parent-section locked" aria-labelledby="parent-title">
         <div class="panel-heading">
           <div>
             <h2 id="parent-title">家長後台</h2>
             <p>查看今天完成度、各項進度、孩子留言和手寫作業照片。</p>
+            <p id="syncStatus" class="sync-status">雲端同步：尚未設定資料庫，目前使用本機資料。</p>
           </div>
           <div class="controls">
             <label for="parentDate">查看日期</label>
             <input id="parentDate" type="date">
             <button id="refreshParentBtn" type="button">重新整理</button>
+            <button id="parentLogoutBtn" type="button" class="secondary">登出</button>
           </div>
         </div>
 
@@ -187,6 +200,11 @@
     <p>週一到週五執行，週六輕複習，週日休息。進度與照片會存在目前這台裝置的瀏覽器中。</p>
   </footer>
 
+  <script>
+    window.CLOUD_CONFIG = {
+      databaseURL: ""
+    };
+  </script>
   <script src="script.js"></script>
 </body>
 </html>

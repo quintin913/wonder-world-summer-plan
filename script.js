@@ -62,6 +62,10 @@ const progressItems = [
   { id: "societyNature", label: "社會或自然" }
 ];
 
+const PARENT_PASSWORD = "0913";
+const STUDENT_ID = "hehe";
+const CLOUD_CONFIG = window.CLOUD_CONFIG || {};
+
 const mathVideoLinks = [
   { title: "10000 以內的數", url: "https://www.junyiacademy.org/topics/k-m3a" },
   { title: "四位數的加減", url: "https://www.junyiacademy.org/topics/k-m3a" },
@@ -77,7 +81,28 @@ function todayKey(date = new Date()) {
 }
 
 function storageKey(dateText = todayKey()) {
-  return `lin-a-he-summer-progress:${dateText}`;
+  return `hehe-summer-progress:${dateText}`;
+}
+
+function cloudEnabled() {
+  return Boolean(CLOUD_CONFIG.databaseURL && CLOUD_CONFIG.databaseURL.startsWith("https://"));
+}
+
+function cloudUrl(dateText = todayKey()) {
+  const base = CLOUD_CONFIG.databaseURL.replace(/\/$/, "");
+  return `${base}/summerProgress/${STUDENT_ID}/${dateText}.json`;
+}
+
+function updateSyncStatus(message) {
+  const status = document.querySelector("#syncStatus");
+  if (!status) return;
+  if (!cloudEnabled()) {
+    status.textContent = "雲端同步：尚未設定資料庫，目前使用本機資料。";
+    status.classList.add("offline");
+    return;
+  }
+  status.textContent = message || "雲端同步：已連線 Firebase。";
+  status.classList.remove("offline");
 }
 
 function loadProgress(dateText = todayKey()) {
@@ -91,6 +116,46 @@ function loadProgress(dateText = todayKey()) {
 
 function saveProgress(data, dateText = todayKey()) {
   localStorage.setItem(storageKey(dateText), JSON.stringify(data));
+  pushCloudProgress(data, dateText);
+}
+
+async function pushCloudProgress(data, dateText = todayKey()) {
+  if (!cloudEnabled()) {
+    updateSyncStatus();
+    return;
+  }
+  try {
+    await fetch(cloudUrl(dateText), {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...data, syncedAt: new Date().toISOString() })
+    });
+    updateSyncStatus(`雲端同步：已更新 ${new Date().toLocaleTimeString("zh-TW", { hour: "2-digit", minute: "2-digit" })}`);
+  } catch {
+    updateSyncStatus("雲端同步：連線失敗，已先保存在這台裝置。");
+  }
+}
+
+async function pullCloudProgress(dateText = todayKey()) {
+  if (!cloudEnabled()) {
+    updateSyncStatus();
+    return loadProgress(dateText);
+  }
+  try {
+    updateSyncStatus("雲端同步：讀取中...");
+    const response = await fetch(cloudUrl(dateText), { cache: "no-store" });
+    if (!response.ok) throw new Error("cloud read failed");
+    const remote = await response.json();
+    if (remote) {
+      localStorage.setItem(storageKey(dateText), JSON.stringify(remote));
+      updateSyncStatus(`雲端同步：已讀取 ${dateText}`);
+      return loadProgress(dateText);
+    }
+    updateSyncStatus(`雲端同步：${dateText} 尚無資料。`);
+  } catch {
+    updateSyncStatus("雲端同步：讀取失敗，顯示這台裝置的資料。");
+  }
+  return loadProgress(dateText);
 }
 
 function pickMany(items, count) {
@@ -330,9 +395,9 @@ async function addPhotos(files) {
   renderParentDashboard();
 }
 
-function renderParentDashboard() {
+async function renderParentDashboard() {
   const dateText = document.querySelector("#parentDate").value || todayKey();
-  const data = loadProgress(dateText);
+  const data = await pullCloudProgress(dateText);
   const done = progressItems.filter(item => data.checks[item.id]).length;
   const percent = Math.round((done / progressItems.length) * 100);
   const photos = data.photos || [];
@@ -359,7 +424,41 @@ function generatePractice() {
 function switchView(viewId) {
   document.querySelectorAll(".view").forEach(view => view.classList.toggle("active", view.id === viewId));
   document.querySelectorAll(".tab-button").forEach(button => button.classList.toggle("active", button.dataset.view === viewId));
-  if (viewId === "parentView") renderParentDashboard();
+  if (viewId === "parentView") {
+    if (sessionStorage.getItem("parentAuthed") === "yes") {
+      showParentDashboard();
+    } else {
+      showParentLogin();
+    }
+  }
+}
+
+function showParentLogin(message = "") {
+  document.querySelector("#parentLogin").classList.remove("locked");
+  document.querySelector("#parentDashboard").classList.add("locked");
+  document.querySelector("#parentLoginMessage").textContent = message;
+}
+
+function showParentDashboard() {
+  document.querySelector("#parentLogin").classList.add("locked");
+  document.querySelector("#parentDashboard").classList.remove("locked");
+  renderParentDashboard();
+}
+
+function loginParent() {
+  const input = document.querySelector("#parentPassword");
+  if (input.value === PARENT_PASSWORD) {
+    sessionStorage.setItem("parentAuthed", "yes");
+    input.value = "";
+    showParentDashboard();
+  } else {
+    showParentLogin("密碼錯誤，請再試一次。");
+  }
+}
+
+function logoutParent() {
+  sessionStorage.removeItem("parentAuthed");
+  showParentLogin("已登出家長後台。");
 }
 
 function init() {
@@ -382,6 +481,11 @@ function init() {
   `).join("");
 
   document.querySelectorAll(".tab-button").forEach(button => button.addEventListener("click", () => switchView(button.dataset.view)));
+  document.querySelector("#parentLoginBtn").addEventListener("click", loginParent);
+  document.querySelector("#parentPassword").addEventListener("keydown", event => {
+    if (event.key === "Enter") loginParent();
+  });
+  document.querySelector("#parentLogoutBtn").addEventListener("click", logoutParent);
   document.querySelector("#generateBtn").addEventListener("click", generatePractice);
   document.querySelector("#printBtn").addEventListener("click", () => window.print());
   document.querySelector("#daySelect").addEventListener("change", renderMaterials);
@@ -418,7 +522,12 @@ function init() {
   generatePractice();
   renderMaterials();
   renderProgressControls();
-  renderParentDashboard();
+  updateSyncStatus();
+  if (sessionStorage.getItem("parentAuthed") === "yes") {
+    showParentDashboard();
+  } else {
+    showParentLogin();
+  }
 }
 
 init();

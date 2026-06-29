@@ -133,6 +133,32 @@ section {
   display: block;
 }
 
+.locked {
+  display: none;
+}
+
+.parent-login {
+  max-width: 680px;
+  margin-inline: auto;
+}
+
+.login-row {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.sync-status {
+  margin: 8px 0 0;
+  color: var(--green);
+  font-weight: 700;
+}
+
+.sync-status.offline {
+  color: #946100;
+}
+
 .panel-heading {
   display: flex;
   justify-content: space-between;
@@ -366,6 +392,7 @@ button.secondary {
 }
 
 input[type="date"],
+input[type="password"],
 input[type="file"],
 textarea {
   width: 100%;
@@ -538,6 +565,10 @@ footer {
   .tab-bar {
     display: grid;
     grid-template-columns: 1fr 1fr;
+  }
+
+  .login-row {
+    grid-template-columns: 1fr;
   }
 }
 
