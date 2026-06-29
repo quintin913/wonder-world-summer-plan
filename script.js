@@ -128,7 +128,7 @@ async function pushCloudProgress(data, dateText = todayKey()) {
     await fetch(cloudUrl(dateText), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...data, syncedAt: new Date().toISOString() })
+      body: JSON.stringify({ ...data, accessCode: PARENT_PASSWORD, syncedAt: new Date().toISOString() })
     });
     updateSyncStatus(`雲端同步：已更新 ${new Date().toLocaleTimeString("zh-TW", { hour: "2-digit", minute: "2-digit" })}`);
   } catch {

@@ -40,3 +40,24 @@ https://your-project-id-default-rtdb.firebaseio.com
 ## 注意
 
 家長後台密碼 `0913` 是前端畫面保護，適合家庭使用與避免孩子誤按。若要更嚴格的帳號權限，需要再加 Firebase Authentication。
+
+## 目前使用的規則
+
+請到 Firebase Console > Realtime Database > 規則，貼上並發布：
+
+```json
+{
+  "rules": {
+    "summerProgress": {
+      "hehe": {
+        "$date": {
+          ".read": true,
+          ".write": "newData.child('accessCode').val() === '0913'"
+        }
+      }
+    }
+  }
+}
+```
+
+這會讓網站可以讀取賀賀的進度，寫入時必須帶有 `0913` 代碼。
