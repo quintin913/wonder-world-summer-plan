@@ -96,8 +96,9 @@
         </div>
         <div id="studentChecklist" class="checklist progress-list"></div>
         <div class="upload-panel">
-          <label for="photoInput">手寫作業拍照上傳</label>
-          <input id="photoInput" type="file" accept="image/*" capture="environment">
+          <label for="photoInput">手寫作業照片上傳</label>
+          <input id="photoInput" type="file" accept="image/*" multiple>
+          <p class="upload-hint">iPad 可選「拍照」或「照片圖庫」。如果相機畫面變黑，先用相機 App 拍好，再從照片圖庫選取。</p>
           <textarea id="studentNote" rows="3" placeholder="今天哪一題比較難？或想跟家長說什麼？"></textarea>
           <div class="controls">
             <button id="saveProgressBtn" type="button">儲存今天進度</button>

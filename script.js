@@ -359,6 +359,19 @@ function renderPhotoPreview(targetSelector, photos, allowDelete) {
   `).join("");
 }
 
+function isIOSLikeDevice() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+}
+
+function readOriginalImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = () => resolve(reader.result);
+    reader.readAsDataURL(file);
+  });
+}
+
 function resizeImage(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -387,7 +400,13 @@ async function addPhotos(files) {
   const photos = data.photos || [];
   for (const file of [...files].slice(0, 3)) {
     if (!file.type.startsWith("image/")) continue;
-    photos.push({ dataUrl: await resizeImage(file), createdAt: new Date().toISOString() });
+    let dataUrl;
+    try {
+      dataUrl = isIOSLikeDevice() ? await readOriginalImage(file) : await resizeImage(file);
+    } catch {
+      dataUrl = await readOriginalImage(file);
+    }
+    photos.push({ dataUrl, createdAt: new Date().toISOString() });
   }
   data.photos = photos.slice(-6);
   saveProgress(data);
