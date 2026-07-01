@@ -59,12 +59,14 @@ const progressItems = [
   { id: "mathTablet", label: "數學平板" },
   { id: "mathWorkbook", label: "數學作業本" },
   { id: "englishTablet", label: "英文平板" },
-  { id: "societyNature", label: "社會或自然" }
+  { id: "societyNature", label: "社會或自然" },
+  { id: "fitness", label: "30 分鐘體能" }
 ];
 
 const PARENT_PASSWORD = "0913";
 const STUDENT_ID = "hehe";
 const CLOUD_CONFIG = window.CLOUD_CONFIG || {};
+const PLAN_START_DATE = new Date("2026-07-01T00:00:00+08:00");
 
 const mathVideoLinks = [
   { title: "10000 以內的數", url: "https://www.junyiacademy.org/topics/k-m3a" },
@@ -73,11 +75,33 @@ const mathVideoLinks = [
   { title: "乘法練習", url: "https://www.junyiacademy.org/topics/k-m3a" }
 ];
 
+const fitnessPlans = [
+  { title: "月台暖身日", items: ["原地踏步 5 分鐘", "開合跳 3 組，每組 20 下", "深蹲 3 組，每組 10 下", "小腿伸展 5 分鐘", "喝水休息"] },
+  { title: "列車肌力日", items: ["暖身走路 5 分鐘", "靠牆伏地挺身 3 組，每組 8 下", "弓箭步 3 組，每腳 8 下", "棒式 3 次，每次 15 秒", "肩頸伸展"] },
+  { title: "平衡號列車", items: ["單腳站立左右各 3 次，每次 20 秒", "腳跟接腳尖走 5 趟", "側併步 5 分鐘", "深蹲 2 組，每組 12 下", "腿後側伸展"] },
+  { title: "車掌敏捷日", items: ["暖身 5 分鐘", "折返快走 8 趟", "高抬腿 3 組，每組 20 秒", "左右跨步 3 組，每組 20 秒", "全身伸展 7 分鐘"] },
+  { title: "週五舒展列車", items: ["原地踏步 5 分鐘", "親子拋接球或毛巾球 10 分鐘", "瑜伽貓牛式 10 次", "兒童式休息 2 分鐘", "全身伸展 8 分鐘"] }
+];
+
 function todayKey(date = new Date()) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+}
+
+function planDayIndex(date = new Date()) {
+  const today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const start = new Date(PLAN_START_DATE.getFullYear(), PLAN_START_DATE.getMonth(), PLAN_START_DATE.getDate());
+  if (today <= start) return 0;
+  let count = 0;
+  const cursor = new Date(start);
+  while (cursor < today) {
+    cursor.setDate(cursor.getDate() + 1);
+    const day = cursor.getDay();
+    if (day !== 0 && day !== 6) count += 1;
+  }
+  return Math.max(0, Math.min(dayMaterials.length - 1, count));
 }
 
 function storageKey(dateText = todayKey()) {
@@ -114,25 +138,32 @@ function loadProgress(dateText = todayKey()) {
   }
 }
 
-function saveProgress(data, dateText = todayKey()) {
-  localStorage.setItem(storageKey(dateText), JSON.stringify(data));
-  pushCloudProgress(data, dateText);
+async function saveProgress(data, dateText = todayKey()) {
+  try {
+    localStorage.setItem(storageKey(dateText), JSON.stringify(data));
+  } catch {
+    updateSyncStatus("本機儲存空間不足，仍會嘗試同步到雲端。");
+  }
+  return pushCloudProgress(data, dateText);
 }
 
 async function pushCloudProgress(data, dateText = todayKey()) {
   if (!cloudEnabled()) {
     updateSyncStatus();
-    return;
+    return false;
   }
   try {
-    await fetch(cloudUrl(dateText), {
+    const response = await fetch(cloudUrl(dateText), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...data, accessCode: PARENT_PASSWORD, syncedAt: new Date().toISOString() })
     });
+    if (!response.ok) throw new Error(`cloud write failed: ${response.status}`);
     updateSyncStatus(`雲端同步：已更新 ${new Date().toLocaleTimeString("zh-TW", { hour: "2-digit", minute: "2-digit" })}`);
+    return true;
   } catch {
     updateSyncStatus("雲端同步：連線失敗，已先保存在這台裝置。");
+    return false;
   }
 }
 
@@ -315,6 +346,27 @@ function renderMaterials() {
   `;
 }
 
+function renderFitness() {
+  const index = Number(document.querySelector("#daySelect").value);
+  const plan = fitnessPlans[index % fitnessPlans.length];
+  document.querySelector("#fitnessOutput").innerHTML = `
+    <article class="material-card">
+      <h3>${plan.title}</h3>
+      <ol>${plan.items.map(item => `<li>${item}</li>`).join("")}</ol>
+      <p class="prompt-box">完成後喝水，休息 3 分鐘，再勾選「30 分鐘體能」。若身體不舒服，今天改做伸展即可。</p>
+    </article>
+    <article class="material-card">
+      <h3>安全檢查</h3>
+      <ol>
+        <li>地板沒有玩具、書包或電線。</li>
+        <li>身邊至少留一個手臂寬的空間。</li>
+        <li>先暖身再加快速度。</li>
+        <li>覺得頭暈、胸悶、膝蓋痛就立刻停止。</li>
+      </ol>
+    </article>
+  `;
+}
+
 function renderProgressControls() {
   const data = loadProgress();
   document.querySelector("#studentChecklist").innerHTML = progressItems.map(item => `
@@ -359,10 +411,6 @@ function renderPhotoPreview(targetSelector, photos, allowDelete) {
   `).join("");
 }
 
-function isIOSLikeDevice() {
-  return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-}
-
 function readOriginalImage(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -380,14 +428,18 @@ function resizeImage(file) {
       const image = new Image();
       image.onerror = reject;
       image.onload = () => {
-        const maxSize = 1200;
+        const maxSize = 1000;
         const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
         const canvas = document.createElement("canvas");
         canvas.width = Math.round(image.width * scale);
         canvas.height = Math.round(image.height * scale);
         const ctx = canvas.getContext("2d");
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL("image/jpeg", 0.78));
+        const sample = ctx.getImageData(0, 0, Math.min(canvas.width, 20), Math.min(canvas.height, 20)).data;
+        let total = 0;
+        for (let i = 0; i < sample.length; i += 4) total += sample[i] + sample[i + 1] + sample[i + 2];
+        if (total === 0) reject(new Error("blank image"));
+        else resolve(canvas.toDataURL("image/jpeg", 0.72));
       };
       image.src = reader.result;
     };
@@ -398,20 +450,24 @@ function resizeImage(file) {
 async function addPhotos(files) {
   const data = collectProgress();
   const photos = data.photos || [];
+  document.querySelector("#saveMessage").textContent = "照片處理中，請稍等...";
   for (const file of [...files].slice(0, 3)) {
     if (!file.type.startsWith("image/")) continue;
     let dataUrl;
     try {
-      dataUrl = isIOSLikeDevice() ? await readOriginalImage(file) : await resizeImage(file);
+      dataUrl = await resizeImage(file);
     } catch {
       dataUrl = await readOriginalImage(file);
     }
     photos.push({ dataUrl, createdAt: new Date().toISOString() });
   }
   data.photos = photos.slice(-6);
-  saveProgress(data);
+  const synced = await saveProgress(data);
   renderPhotoPreview("#studentPhotoPreview", data.photos, true);
-  renderParentDashboard();
+  document.querySelector("#saveMessage").textContent = synced
+    ? "照片已上傳並同步到家長後台。"
+    : "照片已存在這台裝置，但雲端同步失敗，請檢查網路後再按儲存。";
+  if (sessionStorage.getItem("parentAuthed") === "yes") renderParentDashboard();
 }
 
 async function renderParentDashboard() {
@@ -487,6 +543,10 @@ function init() {
 
   document.querySelector("#weekSelect").innerHTML = plans.map(plan => `<option value="${plan.week}">第 ${plan.week} 週：${plan.title}</option>`).join("");
   document.querySelector("#daySelect").innerHTML = dayMaterials.map((item, index) => `<option value="${index}">第 ${item.week} 週，第 ${item.day} 天</option>`).join("");
+  const autoIndex = planDayIndex(now);
+  document.querySelector("#daySelect").value = String(autoIndex);
+  const autoItem = dayMaterials[autoIndex];
+  document.querySelector("#autoDayMessage").textContent = `以 2026/7/1 為第 1 天，今天自動切到第 ${autoItem.week} 週第 ${autoItem.day} 天；也可以手動改選。`;
   document.querySelector("#weekCards").innerHTML = plans.map(plan => `
     <article class="week-card">
       <h3>第 ${plan.week} 週</h3>
@@ -507,17 +567,20 @@ function init() {
   document.querySelector("#parentLogoutBtn").addEventListener("click", logoutParent);
   document.querySelector("#generateBtn").addEventListener("click", generatePractice);
   document.querySelector("#printBtn").addEventListener("click", () => window.print());
-  document.querySelector("#daySelect").addEventListener("change", renderMaterials);
+  document.querySelector("#daySelect").addEventListener("change", () => {
+    renderMaterials();
+    renderFitness();
+  });
   document.querySelector("#studentChecklist").addEventListener("change", () => {
     updateStudentPercent();
     saveProgress(collectProgress());
-    renderParentDashboard();
+    if (sessionStorage.getItem("parentAuthed") === "yes") renderParentDashboard();
   });
   document.querySelector("#studentNote").addEventListener("input", () => saveProgress(collectProgress()));
-  document.querySelector("#saveProgressBtn").addEventListener("click", () => {
-    saveProgress(collectProgress());
-    document.querySelector("#saveMessage").textContent = "今天進度已儲存。";
-    renderParentDashboard();
+  document.querySelector("#saveProgressBtn").addEventListener("click", async () => {
+    const synced = await saveProgress(collectProgress());
+    document.querySelector("#saveMessage").textContent = synced ? "今天進度已同步到家長後台。" : "今天進度已存在這台裝置，但雲端同步失敗。";
+    if (sessionStorage.getItem("parentAuthed") === "yes") renderParentDashboard();
   });
   document.querySelector("#clearTodayBtn").addEventListener("click", () => {
     localStorage.removeItem(storageKey());
@@ -533,13 +596,14 @@ function init() {
     data.photos.splice(Number(button.dataset.deletePhoto), 1);
     saveProgress(data);
     renderPhotoPreview("#studentPhotoPreview", data.photos, true);
-    renderParentDashboard();
+    if (sessionStorage.getItem("parentAuthed") === "yes") renderParentDashboard();
   });
   document.querySelector("#refreshParentBtn").addEventListener("click", renderParentDashboard);
   document.querySelector("#parentDate").addEventListener("change", renderParentDashboard);
 
   generatePractice();
   renderMaterials();
+  renderFitness();
   renderProgressControls();
   updateSyncStatus();
   if (sessionStorage.getItem("parentAuthed") === "yes") {

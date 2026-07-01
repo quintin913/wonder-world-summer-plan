@@ -66,6 +66,7 @@
           <div><strong>25 分鐘</strong><span>數學作業本：計算題、應用題、訂正</span></div>
           <div><strong>10 分鐘</strong><span>英文平板：Wonder World 音檔、單字跟讀</span></div>
           <div><strong>10 分鐘</strong><span>社會或自然：生活觀察、地圖、實驗記錄</span></div>
+          <div><strong>30 分鐘</strong><span>居家體能：暖身、肌力、平衡、伸展</span></div>
         </div>
       </section>
 
@@ -73,7 +74,7 @@
         <div class="panel-heading">
           <div>
             <h2 id="materials-title">今日素材包</h2>
-            <p>選第幾週第幾天，直接拿這一格素材來做平板與作業本練習。</p>
+            <p id="autoDayMessage">系統會以 7/1 為第 1 天自動切換，也可以手動選第幾週第幾天。</p>
           </div>
           <div class="controls">
             <label for="daySelect">日期</label>
@@ -81,6 +82,16 @@
           </div>
         </div>
         <div id="materialsOutput" class="materials-grid"></div>
+      </section>
+
+      <section class="fitness-section" aria-labelledby="fitness-title">
+        <div class="panel-heading">
+          <div>
+            <h2 id="fitness-title">今日 30 分鐘體能活動</h2>
+            <p>在家就能做，穿運動鞋或赤腳止滑，先清出安全空間。</p>
+          </div>
+        </div>
+        <div id="fitnessOutput" class="materials-grid"></div>
       </section>
 
       <section class="progress-section" aria-labelledby="progress-title">
@@ -98,7 +109,7 @@
         <div class="upload-panel">
           <label for="photoInput">手寫作業照片上傳</label>
           <input id="photoInput" type="file" accept="image/*" multiple>
-          <p class="upload-hint">iPad 可選「拍照」或「照片圖庫」。如果相機畫面變黑，先用相機 App 拍好，再從照片圖庫選取。</p>
+          <p class="upload-hint">iPad 可選「拍照」或「照片圖庫」。照片會轉成較小的 JPEG 後同步到家長後台。</p>
           <textarea id="studentNote" rows="3" placeholder="今天哪一題比較難？或想跟家長說什麼？"></textarea>
           <div class="controls">
             <button id="saveProgressBtn" type="button">儲存今天進度</button>
